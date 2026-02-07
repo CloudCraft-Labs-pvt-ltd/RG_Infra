@@ -41,15 +41,37 @@ jobs:
   - task: TerraformTask@5
     inputs:
       provider: azurerm
+      command: init
+      workingDirectory: $(config_path)
+      backendServiceArm: $(backend_svc)
+      backendAzureRmResourceGroupName: rg-terraform-state
+      backendAzureRmStorageAccountName: stgformstate231023
+      backendAzureRmContainerName: tfstate
+      backendAzureRmKey: tfstate-file
+
+  - task: TerraformTask@5
+    inputs:
+      provider: azurerm
       command: custom
       customCommand: fmt
-      environmentServiceNameAzureRM: $(backend_svc)
+      workingDirectory: $(config_path)
 
 # ================= VALIDATE =================
 - job: Terraform_Validate
   displayName: "Terraform Validate"
   dependsOn: Terraform_Fmt
   steps:
+  - task: TerraformTask@5
+    inputs:
+      provider: azurerm
+      command: init
+      workingDirectory: $(config_path)
+      backendServiceArm: $(backend_svc)
+      backendAzureRmResourceGroupName: rg-terraform-state
+      backendAzureRmStorageAccountName: stgformstate231023
+      backendAzureRmContainerName: tfstate
+      backendAzureRmKey: tfstate-file
+
   - task: TerraformTask@5
     inputs:
       provider: azurerm
@@ -61,6 +83,17 @@ jobs:
   displayName: "Terraform Plan"
   dependsOn: Terraform_Validate
   steps:
+  - task: TerraformTask@5
+    inputs:
+      provider: azurerm
+      command: init
+      workingDirectory: $(config_path)
+      backendServiceArm: $(backend_svc)
+      backendAzureRmResourceGroupName: rg-terraform-state
+      backendAzureRmStorageAccountName: stgformstate231023
+      backendAzureRmContainerName: tfstate
+      backendAzureRmKey: tfstate-file
+
   - task: TerraformTask@5
     inputs:
       provider: azurerm
@@ -87,6 +120,17 @@ jobs:
   displayName: "Terraform Apply"
   dependsOn: Manual_Validation
   steps:
+  - task: TerraformTask@5
+    inputs:
+      provider: azurerm
+      command: init
+      workingDirectory: $(config_path)
+      backendServiceArm: $(backend_svc)
+      backendAzureRmResourceGroupName: rg-terraform-state
+      backendAzureRmStorageAccountName: stgformstate231023
+      backendAzureRmContainerName: tfstate
+      backendAzureRmKey: tfstate-file
+
   - task: TerraformTask@5
     inputs:
       provider: azurerm
