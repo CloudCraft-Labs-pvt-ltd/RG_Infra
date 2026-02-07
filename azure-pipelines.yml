@@ -55,6 +55,7 @@ jobs:
       command: custom
       customCommand: fmt
       workingDirectory: $(config_path)
+      environmentServiceNameAzureRM: $(backend_svc)
 
 # ================= VALIDATE =================
 - job: Terraform_Validate
