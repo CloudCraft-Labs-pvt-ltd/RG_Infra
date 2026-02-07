@@ -37,6 +37,7 @@ stages:
         command: custom
         customCommand: fmt
         workingDirectory: $(config_path)
+        environmentServiceNameAzureRM: $(backend_svc)
 
     - task: TerraformTask@5
       inputs:
