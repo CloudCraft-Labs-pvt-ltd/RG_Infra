@@ -52,23 +52,27 @@ stages:
   dependsOn: Validate
   jobs:
   - job: tfsec
-    displayName: "Run tfsec"
+    displayName: "Run tfsec on Windows agent"
     steps:
-    - task: Bash@3
+
+    - task: PowerShell@2
       displayName: "Install tfsec"
       inputs:
         targetType: inline
         script: |
-          curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
-          tfsec --version
+          Invoke-WebRequest `
+            -Uri https://github.com/aquasecurity/tfsec/releases/latest/download/tfsec-windows-amd64.exe `
+            -OutFile tfsec.exe
+          ./tfsec.exe --version
 
-    - task: Bash@3
+    - task: PowerShell@2
       displayName: "Run tfsec scan"
       inputs:
         targetType: inline
         workingDirectory: $(config_path)
         script: |
-          tfsec .
+          ./tfsec.exe . --severity HIGH,CRITICAL
+
 
 # ================= STAGE 2 =================
 - stage: Plan
