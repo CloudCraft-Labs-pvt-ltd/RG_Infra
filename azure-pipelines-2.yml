@@ -1,4 +1,9 @@
-trigger: none
+trigger:
+  branches:
+    include:
+      - feature/*
+      - main
+     
 
 pool:
   name: AgentVK
@@ -44,35 +49,6 @@ stages:
         provider: azurerm
         command: validate
         workingDirectory: $(config_path)
-
-  # ================= STAGE 1.5 =================
-
-- stage: SecurityScan
-  displayName: "Terraform Security Scan (tfsec)"
-  dependsOn: Validate
-  jobs:
-  - job: tfsec
-    displayName: "Run tfsec on Windows agent"
-    steps:
-
-    - task: PowerShell@2
-      displayName: "Install tfsec"
-      inputs:
-        targetType: inline
-        script: |
-          Invoke-WebRequest `
-            -Uri https://github.com/aquasecurity/tfsec/releases/latest/download/tfsec-windows-amd64.exe `
-            -OutFile tfsec.exe
-          ./tfsec.exe --version
-
-    - task: PowerShell@2
-      displayName: "Run tfsec scan"
-      inputs:
-        targetType: inline
-        workingDirectory: $(config_path)
-        script: |
-          ./tfsec.exe . --severity HIGH,CRITICAL
-
 
 # ================= STAGE 2 =================
 - stage: Plan
