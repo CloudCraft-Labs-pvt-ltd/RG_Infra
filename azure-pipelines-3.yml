@@ -35,9 +35,8 @@ jobs:
   steps:
   - task: ManualValidation@1
     inputs:
-      notifyUsers: 'vaibhavkhupse@gmail.com'
+      notifyUsers: 'vaibhavkhupse@gmail.com' 
       approvers: 'vaibhavkhupse@gmail.com'
-      allowApproversToApproveTheirOwnRuns: false
       instructions: 'Please check the Plan befolr approve'
 
 - job: TerraformApply
