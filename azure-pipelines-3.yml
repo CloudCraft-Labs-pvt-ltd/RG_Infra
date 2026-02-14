@@ -1,0 +1,51 @@
+trigger:
+- main
+- develop
+
+jobs:
+- job: TerraformInitPlan
+  displayName: Terraform Init and plan job
+  pool: AgentVK
+  steps:
+  - task: TerraformInstaller@1
+    inputs:
+      terraformVersion: 'latest'
+
+  - task: TerraformTask@5
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      backendServiceArm: 'vk-secret'
+      backendAzureRmResourceGroupName: 'rg-terraform-state'
+      backendAzureRmStorageAccountName: 'stgformstate231023'
+      backendAzureRmContainerName: 'tfstate'
+      backendAzureRmKey: 'terraform.tfstate'
+
+  - task: TerraformTask@5
+    inputs:
+      provider: 'azurerm'
+      command: 'plan'
+      environmentServiceNameAzureRM: 'vk-secret'
+
+- job: ManualValidation
+  displayName: Manual Validation
+  dependsOn: TerraformInitPlan
+  pool: server
+
+  steps:
+  - task: ManualValidation@1
+    inputs:
+      notifyUsers: 'vaibhavkhupse@gmail.com'
+      approvers: 'vaibhavkhupse@gmail.com'
+      instructions: 'Please check the Plan befolr approve'
+
+- job: TerraformApply
+  displayName: Terraform Apply
+  pool: AgentVK
+  dependsOn: ManualValidation
+  steps:
+  - task: TerraformTask@5
+    inputs:
+      provider: 'azurerm'
+      command: 'apply'
+      environmentServiceNameAzureRM: 'vk-secret'
