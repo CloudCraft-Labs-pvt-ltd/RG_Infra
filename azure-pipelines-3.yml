@@ -35,7 +35,6 @@ jobs:
   steps:
   - task: ManualValidation@1
     inputs:
-      notifyUsers: 'vaibhavkhupse@gmail.com' 
       approvers: 'vaibhavkhupse@gmail.com'
       instructions: 'Please check the Plan befolr approve'
 
