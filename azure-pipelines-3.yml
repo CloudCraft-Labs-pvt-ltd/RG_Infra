@@ -44,6 +44,16 @@ jobs:
   pool: AgentVK
   dependsOn: ManualValidation
   steps:
+
+  - task: TerraformTask@5
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      backendServiceArm: 'vk-secret'
+      backendAzureRmResourceGroupName: 'rg-terraform-state'
+      backendAzureRmStorageAccountName: 'stgformstate231023'
+      backendAzureRmContainerName: 'tfstate'
+      backendAzureRmKey: 'terraform.tfstate'
   - task: TerraformTask@5
     inputs:
       provider: 'azurerm'
