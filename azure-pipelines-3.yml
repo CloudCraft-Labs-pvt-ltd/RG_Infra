@@ -66,6 +66,7 @@ jobs:
       environmentServiceNameAzureRM: 'vk-secret'
 
   - task: TerraformTask@5
+    displayName: Destroy task (only for practice)
     inputs:
       provider: 'azurerm'
       command: 'destroy'
