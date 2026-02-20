@@ -59,7 +59,7 @@ jobs:
       backendAzureRmContainerName: 'tfstate'
       backendAzureRmKey: 'terraform.tfstate'
   - task: TerraformTask@5
-    displayName: apply task and destroy
+    displayName: apply task
     inputs:
       provider: 'azurerm'
       command: 'apply'
@@ -70,6 +70,17 @@ jobs:
   pool: AgentVK
   dependsOn: TerraformApply
   steps:
+
+  - task: TerraformTask@5
+    displayName: Init before destroy task
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      backendServiceArm: 'vk-secret'
+      backendAzureRmResourceGroupName: 'rg-terraform-state'
+      backendAzureRmStorageAccountName: 'stgformstate231023'
+      backendAzureRmContainerName: 'tfstate'
+      backendAzureRmKey: 'terraform.tfstate'
 
   - task: TerraformTask@5
     displayName: Destroy task (only for practice)
