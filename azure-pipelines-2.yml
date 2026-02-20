@@ -1,8 +1,4 @@
-trigger:
-  branches:
-    include:
-      - feature/*
-      - main
+trigger: none
      
 
 pool:
