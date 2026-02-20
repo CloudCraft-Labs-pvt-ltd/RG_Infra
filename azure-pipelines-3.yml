@@ -59,8 +59,14 @@ jobs:
       backendAzureRmContainerName: 'tfstate'
       backendAzureRmKey: 'terraform.tfstate'
   - task: TerraformTask@5
-    displayName: apply task
+    displayName: apply task and destroy
     inputs:
       provider: 'azurerm'
       command: 'apply'
+      environmentServiceNameAzureRM: 'vk-secret'
+
+  - task: TerraformTask@5
+    inputs:
+      provider: 'azurerm'
+      command: 'destroy'
       environmentServiceNameAzureRM: 'vk-secret'
