@@ -18,4 +18,7 @@ blob_properties {
     }
     versioning_enabled = true
   }
+
+
+  
 }
