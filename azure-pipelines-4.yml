@@ -1,0 +1,90 @@
+trigger:
+  - main
+  - feature
+
+jobs:
+- job: TerraformInitPlan
+  displayName: Terraform Init and plan job
+  pool: AgentVK
+  steps:
+  - task: TerraformInstaller@1
+    inputs:
+      terraformVersion: 'latest'
+
+  - task: TerraformTask@5
+    displayName: Init Task
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      backendServiceArm: 'vk-secret'
+      backendAzureRmResourceGroupName: 'rg-terraform-state'
+      backendAzureRmStorageAccountName: 'stgformstate231023'
+      backendAzureRmContainerName: 'tfstate'
+      backendAzureRmKey: 'terraform.tfstate'
+
+  - task: TerraformTask@5
+    displayName: Plan Task
+    inputs:
+      provider: 'azurerm'
+      command: 'plan'
+      environmentServiceNameAzureRM: 'vk-secret'
+
+- job: ManualValidation
+  displayName: Manual Validation Job
+  dependsOn: TerraformInitPlan
+  pool: server
+
+  steps:
+  - task: ManualValidation@1
+    displayName: Manual Validation Task
+    inputs:
+      notifyUsers: 'vaibhavkhupse116@gmail.com'
+      approvers: 'vaibhavkhupse116@gmail.com'
+      instructions: 'Please check the Plan befolr approve'
+
+- job: TerraformApply
+  displayName: Terraform Apply Job
+  pool: AgentVK
+  dependsOn: ManualValidation
+  steps:
+
+  - task: TerraformTask@5
+    displayName: Init before apply task
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      backendServiceArm: 'vk-secret'
+      backendAzureRmResourceGroupName: 'rg-terraform-state'
+      backendAzureRmStorageAccountName: 'stgformstate231023'
+      backendAzureRmContainerName: 'tfstate'
+      backendAzureRmKey: 'terraform.tfstate'
+  - task: TerraformTask@5
+    displayName: apply task
+    inputs:
+      provider: 'azurerm'
+      command: 'apply'
+      environmentServiceNameAzureRM: 'vk-secret'
+
+- job: TerraformDestroy
+  displayName: Terraform destroy Job
+  pool: AgentVK
+  dependsOn: TerraformApply
+  steps:
+
+  - task: TerraformTask@5
+    displayName: Init before destroy task
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      backendServiceArm: 'vk-secret'
+      backendAzureRmResourceGroupName: 'rg-terraform-state'
+      backendAzureRmStorageAccountName: 'stgformstate231023'
+      backendAzureRmContainerName: 'tfstate'
+      backendAzureRmKey: 'terraform.tfstate'
+
+  - task: TerraformTask@5
+    displayName: Destroy task (only for practice)
+    inputs:
+      provider: 'azurerm'
+      command: 'destroy'
+      environmentServiceNameAzureRM: 'vk-secret'
