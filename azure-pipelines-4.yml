@@ -9,15 +9,6 @@ jobs:
     inputs:
       terraformVersion: 'latest'
 
-- job: ScaningJob
-  displayName: Scanning Code
-  pool: AgentVK
-  steps:
-  - task: tfsec@1
-    inputs:
-      version: 'v1.26.0'
-      dir: '$(System.DefaultWorkingDirectory)'
-
   - task: TerraformTask@5
     displayName: Init Task
     inputs:
@@ -35,6 +26,15 @@ jobs:
       provider: 'azurerm'
       command: 'plan'
       environmentServiceNameAzureRM: 'vk-secret'
+
+- job: ScaningJob
+  displayName: Scanning Code
+  pool: AgentVK
+  steps:
+  - task: tfsec@1
+    inputs:
+      version: 'v1.26.0'
+      dir: '$(System.DefaultWorkingDirectory)'
 
 - job: ManualValidation
   displayName: Manual Validation Job
