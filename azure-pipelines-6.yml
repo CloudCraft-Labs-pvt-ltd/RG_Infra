@@ -1,17 +1,12 @@
 trigger: none
 
 parameters:
-- name: Environment
-  displayName: environment
+- name: environment
+  displayName: Environment
   type: string
   values:
-    - dev
-    - prod
-  
-
-- name: runDestroy
-  type: boolean
-  default: false
+  - dev
+  - prod
 
 variables: 
   WorkingDir: $(System.DefaultWorkingDirectory)
