@@ -1,5 +1,12 @@
 trigger: none
 
+
+parameters:
+- name: runScanning
+  type: boolean
+  default: true
+
+
 jobs:
 - job: TerraformInitPlan
   displayName: Terraform Init and plan job
@@ -29,6 +36,7 @@ jobs:
 
 - job: ScaningJob
   displayName: Scanning Code
+  condition: eq('${{ parameters.runScanning }}', true)
   pool: AgentVK
   steps:
   - task: tfsec@1
