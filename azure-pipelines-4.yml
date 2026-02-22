@@ -8,6 +8,7 @@ parameters:
 
 variables: 
   WorkingDir: $(System.DefaultWorkingDirectory)
+  VkScerte : vk-secret
 
 
 
@@ -25,7 +26,7 @@ jobs:
     inputs:
       provider: 'azurerm'
       command: 'init'
-      backendServiceArm: 'vk-secret'
+      backendServiceArm: $(VkScerte)
       backendAzureRmResourceGroupName: 'rg-terraform-state'
       backendAzureRmStorageAccountName: 'stgformstate231023'
       backendAzureRmContainerName: 'tfstate'
@@ -36,7 +37,7 @@ jobs:
     inputs:
       provider: 'azurerm'
       command: 'plan'
-      environmentServiceNameAzureRM: 'vk-secret'
+      environmentServiceNameAzureRM: $(VkScerte)
 
 - job: ScaningJob
   displayName: Scanning Code
@@ -72,7 +73,7 @@ jobs:
     inputs:
       provider: 'azurerm'
       command: 'init'
-      backendServiceArm: 'vk-secret'
+      backendServiceArm: $(VkScerte)
       backendAzureRmResourceGroupName: 'rg-terraform-state'
       backendAzureRmStorageAccountName: 'stgformstate231023'
       backendAzureRmContainerName: 'tfstate'
@@ -82,7 +83,7 @@ jobs:
     inputs:
       provider: 'azurerm'
       command: 'apply'
-      environmentServiceNameAzureRM: 'vk-secret'
+      environmentServiceNameAzureRM: $(VkScerte)
 
 - job: TerraformDestroy
   displayName: Terraform destroy Job
@@ -95,7 +96,7 @@ jobs:
     inputs:
       provider: 'azurerm'
       command: 'init'
-      backendServiceArm: 'vk-secret'
+      backendServiceArm: $(VkScerte)
       backendAzureRmResourceGroupName: 'rg-terraform-state'
       backendAzureRmStorageAccountName: 'stgformstate231023'
       backendAzureRmContainerName: 'tfstate'
@@ -106,4 +107,4 @@ jobs:
     inputs:
       provider: 'azurerm'
       command: 'destroy'
-      environmentServiceNameAzureRM: 'vk-secret'
+      environmentServiceNameAzureRM: $(VkScerte)
