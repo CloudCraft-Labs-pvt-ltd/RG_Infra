@@ -7,7 +7,6 @@ resource "azurerm_resource_group" "rg1" {
   location = "West Europe"
 }
 
-#automated pipeline for Dev Env
 
 # resource "azurerm_storage_account" "stg" {
 #   name                     = "vkstgaccount"
