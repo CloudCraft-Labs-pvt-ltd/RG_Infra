@@ -33,7 +33,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        backendServiceArm: $(VkScerte)
+        backendServiceArm: '$(VkScerte)'
         backendAzureRmResourceGroupName: 'rg-terraform-state'
         backendAzureRmStorageAccountName: 'stgformstate231023'
         backendAzureRmContainerName: 'tfstate'
