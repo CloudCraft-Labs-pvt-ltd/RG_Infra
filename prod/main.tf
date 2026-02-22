@@ -2,6 +2,11 @@ resource "azurerm_resource_group" "rg" {
   name     = "vk-rg-prod"
   location = "West Europe"
 }
+
+
+
+
+
 # resource "azurerm_storage_account" "stg" {
 #   name                     = "vkstgaccount"
 #   resource_group_name      = azurerm_resource_group.rg.name
