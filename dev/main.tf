@@ -2,11 +2,12 @@ resource "azurerm_resource_group" "rg" {
   name     = "vk-rg-dev"
   location = "West Europe"
 }
-
 resource "azurerm_resource_group" "rg1" {
   name     = "vk-rg-dev2"
   location = "West Europe"
 }
+
+#automated pipeline for Dev Env
 
 # resource "azurerm_storage_account" "stg" {
 #   name                     = "vkstgaccount"
