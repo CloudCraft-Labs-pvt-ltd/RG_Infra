@@ -11,6 +11,12 @@ jobs:
     inputs:
       terraformVersion: 'latest'
 
+- job: ScaningJob
+  displayName: Scanning Code
+  pool: AgentVK
+  steps:
+  
+
   - task: TerraformTask@5
     displayName: Init Task
     inputs:
