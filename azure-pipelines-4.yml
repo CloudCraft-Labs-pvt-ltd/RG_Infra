@@ -10,12 +10,11 @@ variables:
   WorkingDir: $(System.DefaultWorkingDirectory)
   VkScerte : vk-secret
 
-
+pool: AgentVK
 
 jobs:
 - job: TerraformInitPlan
   displayName: Terraform Init and plan job
-  pool: AgentVK
   steps:
   - task: TerraformInstaller@1
     inputs:
