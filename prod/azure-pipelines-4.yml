@@ -1,0 +1,109 @@
+trigger: none
+
+
+parameters:
+- name: runScanning
+  type: boolean
+  default: true
+
+variables: 
+  WorkingDir: $(System.DefaultWorkingDirectory)
+  VkScerte : vk-secret
+
+pool: AgentVK
+
+jobs:
+- job: TerraformInitPlan
+  displayName: Terraform Init and plan job
+  steps:
+  - task: TerraformInstaller@1
+    inputs:
+      terraformVersion: 'latest'
+
+  - task: TerraformTask@5
+    displayName: Init Task
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      backendServiceArm: $(VkScerte)
+      backendAzureRmResourceGroupName: 'rg-terraform-state'
+      backendAzureRmStorageAccountName: 'stgformstate231023'
+      backendAzureRmContainerName: 'tfstate'
+      backendAzureRmKey: 'terraform.tfstate'
+
+  - task: TerraformTask@5
+    displayName: Plan Task
+    inputs:
+      provider: 'azurerm'
+      command: 'plan'
+      environmentServiceNameAzureRM: $(VkScerte)
+
+- job: ScaningJob
+  displayName: Scanning Code
+  condition: eq('${{ parameters.runScanning }}', true)
+  pool: AgentVK
+  steps:
+  - task: tfsec@1
+    inputs:
+      version: 'v1.26.0'
+      dir: '$(WorkingDir)'
+
+- job: ManualValidation
+  displayName: Manual Validation Job
+  dependsOn: TerraformInitPlan
+  pool: server
+
+  steps:
+  - task: ManualValidation@1
+    displayName: Manual Validation Task
+    inputs:
+      notifyUsers: 'vaibhavkhupse116@gmail.com'
+      approvers: 'vaibhavkhupse116@gmail.com'
+      instructions: 'Please check the Plan befolr approve'
+
+- job: TerraformApply
+  displayName: Terraform Apply Job
+  pool: AgentVK
+  dependsOn: ManualValidation
+  steps:
+
+  - task: TerraformTask@5
+    displayName: Init before apply task
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      backendServiceArm: $(VkScerte)
+      backendAzureRmResourceGroupName: 'rg-terraform-state'
+      backendAzureRmStorageAccountName: 'stgformstate231023'
+      backendAzureRmContainerName: 'tfstate'
+      backendAzureRmKey: 'terraform.tfstate'
+  - task: TerraformTask@5
+    displayName: apply task
+    inputs:
+      provider: 'azurerm'
+      command: 'apply'
+      environmentServiceNameAzureRM: $(VkScerte)
+
+- job: TerraformDestroy
+  displayName: Terraform destroy Job
+  pool: AgentVK
+  dependsOn: TerraformApply
+  steps:
+
+  - task: TerraformTask@5
+    displayName: Init before destroy task
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      backendServiceArm: $(VkScerte)
+      backendAzureRmResourceGroupName: 'rg-terraform-state'
+      backendAzureRmStorageAccountName: 'stgformstate231023'
+      backendAzureRmContainerName: 'tfstate'
+      backendAzureRmKey: 'terraform.tfstate'
+
+  - task: TerraformTask@5
+    displayName: Destroy task (only for practice)
+    inputs:
+      provider: 'azurerm'
+      command: 'destroy'
+      environmentServiceNameAzureRM: $(VkScerte)
