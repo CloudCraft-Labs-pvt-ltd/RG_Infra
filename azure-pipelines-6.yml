@@ -1,6 +1,4 @@
-trigger:
-  - main
-  - feature
+trigger: none
 
 parameters:
 - name: RG_Infra
