@@ -1,6 +1,4 @@
-trigger:
-- main
-- develop
+trigger: none
 
 jobs:
 - job: TerraformInitPlan
