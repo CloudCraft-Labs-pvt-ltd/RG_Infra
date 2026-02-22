@@ -1,6 +1,4 @@
-trigger:
-  - main
-  - feature
+trigger: none
 
 jobs:
 - job: TerraformInitPlan
@@ -15,7 +13,10 @@ jobs:
   displayName: Scanning Code
   pool: AgentVK
   steps:
-  
+  - task: tfsec@1
+    inputs:
+      version: 'v1.26.0'
+      dir: '$(System.DefaultWorkingDirectory)'
 
   - task: TerraformTask@5
     displayName: Init Task
