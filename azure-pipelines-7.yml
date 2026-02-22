@@ -2,10 +2,6 @@ trigger:
   - main
   - feature
 
-- name: runDestroy
-  type: boolean
-  default: false
-
 variables:
   WorkingDir: '$(System.DefaultWorkingDirectory)/dev}'
   VkScerte: vk-secret
@@ -122,29 +118,29 @@ stages:
         workingDirectory: $(WorkingDir)
         environmentServiceNameAzureRM: $(VkScerte)
 
-# ================= DESTROY STAGE (OPTIONAL) =================
+# # ================= DESTROY STAGE (OPTIONAL) =================
 
-  - job: Terraform_Destroy
-    displayName: Terraform Destroy (Optional)
-    dependsOn: Terraform_Apply
-    condition: eq(${{ parameters.runDestroy }}, true)
-    steps:
-    - task: TerraformTask@5
-      displayName: Terraform Init
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: $(WorkingDir)
-        backendServiceArm: $(VkScerte)
-        backendAzureRmResourceGroupName: 'rg-terraform-state'
-        backendAzureRmStorageAccountName: 'stgformstate231023'
-        backendAzureRmContainerName: 'tfstate'
-        backendAzureRmKey: 'dev.tfstate'
+#   - job: Terraform_Destroy
+#     displayName: Terraform Destroy (Optional)
+#     dependsOn: Terraform_Apply
+#     condition: eq(${{ parameters.runDestroy }}, true)
+#     steps:
+#     - task: TerraformTask@5
+#       displayName: Terraform Init
+#       inputs:
+#         provider: 'azurerm'
+#         command: 'init'
+#         workingDirectory: $(WorkingDir)
+#         backendServiceArm: $(VkScerte)
+#         backendAzureRmResourceGroupName: 'rg-terraform-state'
+#         backendAzureRmStorageAccountName: 'stgformstate231023'
+#         backendAzureRmContainerName: 'tfstate'
+#         backendAzureRmKey: 'dev.tfstate'
 
-    - task: TerraformTask@5
-      displayName: Terraform Destroy
-      inputs:
-        provider: 'azurerm'
-        command: 'destroy'
-        workingDirectory: $(WorkingDir)
-        environmentServiceNameAzureRM: $(VkScerte)
+#     - task: TerraformTask@5
+#       displayName: Terraform Destroy
+#       inputs:
+#         provider: 'azurerm'
+#         command: 'destroy'
+#         workingDirectory: $(WorkingDir)
+#         environmentServiceNameAzureRM: $(VkScerte)
