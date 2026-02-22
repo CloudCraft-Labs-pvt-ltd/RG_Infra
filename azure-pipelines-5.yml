@@ -43,6 +43,18 @@ stages:
   - job: TerraformPlan
     dependsOn: Terraform_Install_Init
     steps:
+
+    - task: TerraformTask@5
+      displayName: Init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        backendServiceArm: $(VkScerte)
+        backendAzureRmResourceGroupName: 'rg-terraform-state'
+        backendAzureRmStorageAccountName: 'stgformstate231023'
+        backendAzureRmContainerName: 'tfstate'
+        backendAzureRmKey: 'terraform.tfstate'
+        
     - task: TerraformTask@5
       displayName: Plan
       inputs:
