@@ -1,7 +1,7 @@
 trigger: none
 
 parameters:
-- name: environment
+- name: RG_Infra
   displayName: Environment
   type: string
   values:
@@ -9,14 +9,14 @@ parameters:
   - prod
 
 variables: 
-  WorkingDir: $(System.DefaultWorkingDirectory)/dev
+  WorkingDir: '$(System.DefaultWorkingDirectory)/RG_Infra/${{ parameters.environment}}'
   VkScerte: vk-secret
 
 pool: AgentVK
 
 stages:
 
-# ---------------- Build Stage ----------------
+# ---------------- Build Stage ---------------------------
 
 - stage: Build_Stage
   displayName: Build Stage
@@ -61,7 +61,7 @@ stages:
         command: 'plan'
         environmentServiceNameAzureRM: $(VkScerte)
 
-# ---------------- Scanning Stage ----------------
+# ---------------- Scanning Stage ----------------------
 
 - stage: Scanning_Stage
   dependsOn: Build_Stage
@@ -73,7 +73,7 @@ stages:
         version: 'v1.26.0'
         dir: '$(WorkingDir)'
 
-# ---------------- Deploy Stage ----------------
+# ---------------- Deploy Stage -----------------------
 
 - stage: Deploy_Stage
   dependsOn:
